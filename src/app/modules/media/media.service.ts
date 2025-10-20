@@ -3,9 +3,9 @@ import Media, { IMedia } from "../media/media.schema";
 
 interface CreateMediaPayload {
     title: string;
-    type: 'image' | 'video' | 'document';
+    type: 'world project' | 'portfolio' | 'article';
     fileUrl: string;
-    status: 'active' | 'inactive';
+    status: 'regular upload' | 'draft' | 'published';
     description: string;
 }
 

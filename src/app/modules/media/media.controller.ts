@@ -36,13 +36,12 @@ export const createMediaController = async (req: Request, res: Response) => {
             title: title.trim(),
             type,
             fileUrl: cloudinaryData?.url,
-            status: status || 'active',
+            status: status || 'regular upload',
             description: description || ''
         };
 
         // Call service to save to database
         const result = await mediaService.createMedia(payload);
-   console.log(result);
         // Send success response
         return res.status(201).json({
             statusCode: 201,

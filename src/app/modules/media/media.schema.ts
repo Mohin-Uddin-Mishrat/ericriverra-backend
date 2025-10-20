@@ -2,9 +2,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IMedia extends Document {
     title: string;
-    type: 'image' | 'video' | 'document';
+    type: 'world project' | 'portfolio' | 'article';
     fileUrl?: string;
-    status: 'active' | 'inactive';
+    status: 'regular upload' | 'draft' | 'published';
     description: string;
     createdAt: Date;
     updatedAt: Date;
@@ -20,7 +20,7 @@ const mediaSchema = new Schema<IMedia>(
         },
         type: {
             type: String,
-            enum: ['image', 'video', 'document'],
+            enum: ['world project', 'portfolio' , 'article'],
             required: [true, 'Media type is required']
         },
         fileUrl: {
@@ -29,8 +29,8 @@ const mediaSchema = new Schema<IMedia>(
         },
         status: {
             type: String,
-            enum: ['active', 'inactive'],
-            default: 'active'
+            enum: ['regular upload', 'draft', 'published'],
+            default: 'regular upload'
         },
         description: {
             type: String,
