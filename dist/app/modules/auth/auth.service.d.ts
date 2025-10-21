@@ -15,7 +15,11 @@ export declare const auth_services: {
     login_user_from_db: (payload: TLoginPayload) => Promise<{
         accessToken: string;
         refreshToken: string;
-        role: "USER" | "ADMIN" | "ARCHITECTURE" | undefined;
+        user: mongoose.Document<unknown, {}, TAccount, {}, mongoose.DefaultSchemaOptions> & TAccount & {
+            _id: mongoose.Types.ObjectId;
+        } & {
+            __v: number;
+        };
     }>;
     get_my_profile_from_db: (email: string) => Promise<{
         account: mongoose.Document<unknown, {}, TAccount, {}, mongoose.DefaultSchemaOptions> & TAccount & {

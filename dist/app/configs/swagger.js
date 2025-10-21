@@ -17,10 +17,13 @@ const setupSwagger = (app) => {
             },
             servers: [
                 {
-                    url: "https://ericriverra-backend.onrender.com/api",
-                    // url: "http://localhost:5000",
+                    url: "https://ericriverra-backend.onrender.com",
                     description: "Live server",
                 },
+                // {
+                //   url: "http://localhost:5000",
+                //   description: "Local development server",
+                // },
             ],
             tags: [
                 {

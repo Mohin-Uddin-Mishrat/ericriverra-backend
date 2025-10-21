@@ -1,18 +1,9 @@
-import { Router } from "express";
-import * as mediaController from "../media/media.controller";
-import uploader from "../../middlewares/uploader";
-import cloudinaryUpload from "../../middlewares/cloudinaryUpload";
-import auth from "../../middlewares/auth";
-
-
-
 /**
  * @swagger
  * tags:
  *   name: Media
  *   description: Media upload and management APIs
  */
-
 /**
  * @swagger
  * components:
@@ -22,7 +13,6 @@ import auth from "../../middlewares/auth";
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-
 /**
  * @swagger
  * /api/v1/media/create:
@@ -119,7 +109,6 @@ import auth from "../../middlewares/auth";
  *                   type: string
  *                   example: "You are not authorized!"
  */
-
 /**
  * @swagger
  * /api/v1/media/me:
@@ -171,7 +160,6 @@ import auth from "../../middlewares/auth";
  *                   type: string
  *                   example: "You are not authorized!"
  */
-
 /**
  * @swagger
  * /api/v1/media/{userEmail}:
@@ -244,30 +232,6 @@ import auth from "../../middlewares/auth";
  *                   type: string
  *                   example: "No media found for this user"
  */
-
-
-const mediaRouter = Router();
-
-
-mediaRouter.post(
-  "/create",
-  auth("USER", "ARCHITECTURE"),
-  uploader.single("file"),
-  cloudinaryUpload,
-  mediaController.createMediaController
-);
-
-mediaRouter.get(
-  "/me",
-  auth("USER", "ARCHITECTURE"),
-  mediaController.getMediaByEmailController
-);
-
-// GET /media/user/:userEmail - Get media of any user (admin/other users)
-mediaRouter.get(
-  "/:userEmail",
-  auth("USER", "ARCHITECTURE"),
-  mediaController.getMediaByUserController
-);
-
+declare const mediaRouter: import("express-serve-static-core").Router;
 export default mediaRouter;
+//# sourceMappingURL=media.routes.d.ts.map
