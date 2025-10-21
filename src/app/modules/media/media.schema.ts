@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IMedia extends Document {
-    userId: mongoose.Types.ObjectId;
+    userEmail?: string;
     title: string;
     type: 'world project' | 'portfolio' | 'article';
     fileUrl?: string;
@@ -11,11 +11,12 @@ export interface IMedia extends Document {
 
 const mediaSchema = new Schema<IMedia>(
     {
-        userId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Users',
-            required: [true, 'User ID is required']
-          
+
+        userEmail: {
+            type: String,
+            required: [true, 'User email is required'],
+            trim: true,
+            maxlength: [100, 'User email cannot exceed 100 characters']
         },
         title: {
             type: String,

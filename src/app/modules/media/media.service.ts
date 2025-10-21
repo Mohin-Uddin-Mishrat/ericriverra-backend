@@ -11,7 +11,6 @@ export interface IMediaInput {
 }
 
 export const createMedia = async (payload: IMediaInput): Promise<IMedia> => {
-    // console.log('from media services..................');
     try {
         const media = await Media.create(payload);
         return media;
@@ -20,28 +19,29 @@ export const createMedia = async (payload: IMediaInput): Promise<IMedia> => {
     }
 
 };
-export const getMediaById = async (id: string): Promise<IMedia | null> => {   
+export const getMediaByEmail = async (email: string): Promise<IMedia | {}> => {
    try {
-       const media = await Media.findById(id);
+       const media = await Media.find({ userEmail: email });
+      //  console.log(media);
        return media;
    } catch (error) {
-       throw new Error(`Failed to get media by ID: ${error}`);
+       throw new Error(`Failed to get media by email: ${error}`);
    }
 }
 
-export const deleteMediaById = async (id: string): Promise<IMedia | null>=>{
+export const deleteMediaByEmail = async (email: string): Promise<IMedia | null>=>{
     try{
-        const media = await Media.findByIdAndDelete(id);
+        const media = await Media.findOneAndDelete({ userEmail: email });
         return media;
     } catch (error) {
-        throw new Error(`Failed to delete media by ID: ${error}`);
+        throw new Error(`Failed to delete media by email: ${error}`);
     }
 }
-export const getMediaByUser = async (userId: string): Promise<IMedia[]> => {
+export const getMediaByUser = async (email: string): Promise<IMedia[]> => {
   try {
-    // Find all media where the userId matches
-    const mediaList = await Media.find({ userId }).sort({ createdAt: -1 });
-    return mediaList; 
+    // Find all media where the userEmail matches
+    const mediaList = await Media.find({ userEmail: email }).sort({ createdAt: -1 });
+    return mediaList;
   } catch (error) {
     console.error("Error fetching media by user:", error);
     throw new Error("Failed to fetch media by user");
