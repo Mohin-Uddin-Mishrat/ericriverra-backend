@@ -5,6 +5,7 @@ import { configs } from "./app/configs";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import expressBasicAuth from "express-basic-auth";
+const port = Number(configs.port) || 5000;
 async function main() {
 mongoose
   .connect(process.env.DB_URL!)
@@ -13,7 +14,7 @@ mongoose
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err.message);
-  });    app.listen(configs.port, () => {
+  });    app.listen(port,"0.0.0.0", () => {
         console.log(`Server listening on port ${configs.port}`);
     });
 }

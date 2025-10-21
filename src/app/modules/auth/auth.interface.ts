@@ -1,4 +1,5 @@
 export type TAccount = {
+    
     email: string;
     password: string;
     lastPasswordChange?: Date;
