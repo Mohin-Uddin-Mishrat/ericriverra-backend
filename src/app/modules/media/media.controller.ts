@@ -1,12 +1,14 @@
 
 import { Request, Response } from 'express';
 import * as mediaService from '../media/media.service';
+import { IMedia } from './media.schema';
 
 export const createMediaController = async (req: Request, res: Response) => {
     try {
         // Get data from request body
         const { title, type, status, description } = req.body;
          const cloudinaryData = req?.cloudinaryData;
+         const userId = 'sdfdhfdhfd5435646';
 
         // Check if file exists
         if (!req.file) {
@@ -33,6 +35,7 @@ export const createMediaController = async (req: Request, res: Response) => {
 
         // Create payload object
         const payload = {
+            userId,
             title: title.trim(),
             type,
             fileUrl: cloudinaryData?.url,
@@ -60,3 +63,70 @@ export const createMediaController = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getMediaByIdController = async (req: Request, res: Response):Promise<void>=>{
+    try{
+        const mediaId = req.params.id;
+        const media = await mediaService.getMediaById(mediaId);
+        if(!media){
+            res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message: 'Media not found',
+                data: null
+            });
+        } else {
+            res.status(200).json({
+                statusCode: 200,
+                success: true,
+                message: 'Media retrieved successfully',
+                data: media
+            })
+        }
+    } catch (error: any){
+        console.error('Get media by ID error:', error);
+        res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: 'Failed to get media by ID',
+            error: error.message || 'Unknown error'
+        });
+    }
+
+}
+export const getMediaByUserController = async (req: Request, res: Response)=>{
+    const userId = req?.params.userId;
+    const medialist = await mediaService.getMediaByUser(userId);
+    try{
+       if(!medialist){
+            res.status(404).json({
+                statusCode: 404,
+                success: false,
+                message: 'Media not found',
+                data: null
+            });
+        } else {
+            res.status(200).json({
+                statusCode: 200,
+                success: true,
+                message: 'Media retrieved successfully',
+                data: medialist
+            })
+        }
+    } catch (error: any){
+        console.error('Get media by ID error:', error);
+        res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message: 'Failed to get media by ID',
+            error: error.message || 'Unknown error'
+        });
+    }
+
+};
+
+// const getAllMediaController = async (req: Request, res: Response)=>{
+//     try{
+
+//     }
+// }

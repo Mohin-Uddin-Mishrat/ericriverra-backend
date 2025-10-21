@@ -1,5 +1,12 @@
 import uploadCloud from "../utils/cloudinary";
 
+// export interface TCloudinaryResponse {
+//   url :string;
+//   public_id: string;
+//   format: string;
+//   resource_type: string;
+// }
+
 const cloudinaryUpload = async (req: any, res: any, next: any) => {
   try {
     if (!req.file) {
@@ -19,7 +26,7 @@ const cloudinaryUpload = async (req: any, res: any, next: any) => {
     }
 
     // ✅ Attach the Cloudinary data to the request
-    req.cloudinaryData = {
+    req.cloudinaryData ={
       url: cloudinaryResponse.secure_url,
       public_id: cloudinaryResponse.public_id,
       format: cloudinaryResponse.format,

@@ -1,17 +1,23 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IMedia extends Document {
+    // userId: mongoose.Types.ObjectId;
+    userId: string;
     title: string;
     type: 'world project' | 'portfolio' | 'article';
     fileUrl?: string;
     status: 'regular upload' | 'draft' | 'published';
     description: string;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 const mediaSchema = new Schema<IMedia>(
     {
+        userId: {
+            // type: Schema.Types.ObjectId,
+            // // ref: 'Users',
+            // required: [true, 'User ID is required']
+            type: String,
+        },
         title: {
             type: String,
             required: [true, 'Title is required'],
