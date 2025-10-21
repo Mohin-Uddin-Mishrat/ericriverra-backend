@@ -11,21 +11,24 @@ type Role = "ARCHITECTURE" | "USER"
 const auth = (...roles: Role[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const tokenHeader = req.headers.authorization;
-            if (!tokenHeader) {
+            const token = req.headers.authorization;
+            console.log(token);
+            if (!token) {
                 throw new AppError('You are not authorize!!', 401);
             }
-            const token = tokenHeader.split(" ")[1]  ;
-
+            const verifyToken = token.split(' ')[1];
+            
             const verifiedUser = jwtHelpers.verifyToken(
-                token,
+                verifyToken as string,
                 configs.jwt.access_token as string,
             );
+            console.log(verifiedUser.email,'.................verify user');
             if (!roles.length || !roles.includes(verifiedUser.role)) {
                 throw new AppError('You are not authorize!!', 401);
             }
             // check user
             const isUserExist = await Account_Model.findOne({ email: verifiedUser?.email }).lean()
+            console.log(isUserExist,'user exist........................');
             if (!isUserExist) {
                 throw new AppError("Account not found !", 404)
             }
@@ -35,13 +38,14 @@ const auth = (...roles: Role[]) => {
             if (isUserExist?.isDeleted) {
                 throw new AppError("This account is deleted", 401)
             }
-            if (!isUserExist?.isVerified) {
-                throw new AppError("This account is not verified ", 401)
-            }
+            // if (!isUserExist?.isVerified) {
+            //     throw new AppError("This account is not verified ", 401)
+            // }
             req.user = verifiedUser as JwtPayloadType;
-            console.log(verifiedUser)
+            console.log(req.user.email,'...............req user email');
             next();
         } catch (err) {
+            console.log(err);
             next(err);
         }
     };

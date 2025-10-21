@@ -36,7 +36,7 @@ const mediaSchema = new Schema<IMedia>(
         status: {
             type: String,
             enum: ['regular upload', 'draft', 'published'],
-            default: 'regular upload'
+            required: [true, 'Media status is required']
         },
         description: {
             type: String,
