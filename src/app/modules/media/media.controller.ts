@@ -1,39 +1,34 @@
 import { Request, Response, NextFunction } from "express";
 import * as mediaService from "./media.service";
 import { JwtPayloadType } from "../../utils/JWT";
+import catchAsync from "../../utils/catch_async";
+import manageResponse from "../../utils/manage_response";
 
-export const createMediaController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  const user = req.user as JwtPayloadType;
-  // const email ='emon@gmail.com'
-  console.log("Logged-in user email:", user.email);
-
-  try {
+export const createMediaController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as JwtPayloadType;
     const { title, type, status, description } = req.body;
     const cloudinaryData = req?.cloudinaryData;
-    
 
+    // ✅ Validation: Check file upload
     if (!req.file) {
-      return res.status(400).json({
+      return manageResponse(res, {
         statusCode: 400,
         success: false,
         message: "File is required",
-        data: null,
       });
     }
 
+    // ✅ Validation: Required fields
     if (!title || !type) {
-      return res.status(400).json({
+      return manageResponse(res, {
         statusCode: 400,
         success: false,
         message: "Title and type are required",
-        data: null,
       });
     }
 
+    // ✅ Prepare payload for DB
     const payload = {
       userEmail: user.email,
       title: title.trim(),
@@ -43,20 +38,18 @@ export const createMediaController = async (
       description: description || "",
     };
 
+    // ✅ Create media record in DB
     const result = await mediaService.createMedia(payload);
 
-    res.status(201).json({
+    // ✅ Send success response
+    manageResponse(res, {
       statusCode: 201,
       success: true,
       message: "Media created successfully",
       data: result,
     });
-  } catch (error: any) {
-    console.error("Media creation error:", error);
-    next(error); // pass to global error handler
   }
-};
-
+);
 /**
  * Get all media of the logged-in user by email
  */

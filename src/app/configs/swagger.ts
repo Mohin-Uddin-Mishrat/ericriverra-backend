@@ -12,10 +12,10 @@ export const setupSwagger = (app: Express) => {
         description: "Backend API for multivendor e-commerce system with customers and vendors",
       },
       servers: [
-        {
-          url: "https://ericriverra-backend.onrender.com",
-          description: "Live server",
-        },
+        // {
+        //   url: "https://ericriverra-backend.onrender.com",
+        //   description: "Live server",
+        // },
         {
           url: "http://localhost:5000",
           description: "Local development server",

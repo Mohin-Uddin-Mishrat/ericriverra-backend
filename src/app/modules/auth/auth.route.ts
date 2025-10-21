@@ -8,7 +8,7 @@ const authRoute = Router()
 
 /**
  * @swagger
- * /api/auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Register a new user
  *     description: Create a new user account with email, password, name, and role.
@@ -71,7 +71,7 @@ const authRoute = Router()
 
 /**
  * @swagger
- * /api/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     description: Login with email and password to receive access token and refresh token.
@@ -123,6 +123,7 @@ const authRoute = Router()
 
 authRoute.post("/register", RequestValidator(auth_validation.register_validation), auth_controllers.register_user)
 authRoute.post("/login", RequestValidator(auth_validation.login_validation), auth_controllers.login_user)
+
 
 authRoute.get(
     '/me',
