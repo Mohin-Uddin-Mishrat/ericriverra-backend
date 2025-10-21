@@ -11,13 +11,19 @@ const app = express()
 
 // middleware
 app.use(cors({
-    origin: ["http://localhost:5173"]
+    origin: ["http://localhost:5173",
+        "http://localhost:5174/",
+        "http://localhost:5175/",
+        "http://localhost:5176/",
+        "https://eric-rivera-front-end.netlify.app/"
+
+    ]
 }))
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
-setupSwagger(app);
+
 app.use("/api", appRouter)
 
 // stating point

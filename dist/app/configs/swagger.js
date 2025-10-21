@@ -17,8 +17,8 @@ const setupSwagger = (app) => {
             },
             servers: [
                 {
-                    //   url: "https://fahadpervez-backend-803d.onrender.com/api/v1",
-                    url: "http://localhost:5000",
+                    url: "https://ericriverra-backend.onrender.com/api",
+                    // url: "http://localhost:5000",
                     description: "Live server",
                 },
             ],
