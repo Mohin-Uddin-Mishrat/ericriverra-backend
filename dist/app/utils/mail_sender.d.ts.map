@@ -1,0 +1,1 @@
+{"version":3,"file":"mail_sender.d.ts","sourceRoot":"","sources":["../../../src/app/utils/mail_sender.ts"],"names":[],"mappings":"AAEA,KAAK,YAAY,GAAG;IAChB,EAAE,EAAE,MAAM,CAAC;IACX,OAAO,EAAE,MAAM,CAAC;IAChB,QAAQ,EAAE,MAAM,CAAC;IACjB,QAAQ,EAAE,MAAM,CAAC;IACjB,IAAI,CAAC,EAAE,MAAM,CAAA;CAChB,CAAA;AAaD,QAAA,MAAM,QAAQ,GAAU,SAAS,YAAY,qEA8E5C,CAAC;AAEF,eAAe,QAAQ,CAAC"}
