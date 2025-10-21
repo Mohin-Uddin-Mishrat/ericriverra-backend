@@ -24,7 +24,7 @@ app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use("/api", appRouter)
+app.use("/api/v1", appRouter)
 
 // stating point
 app.get('/', (req: Request, res: Response) => {
