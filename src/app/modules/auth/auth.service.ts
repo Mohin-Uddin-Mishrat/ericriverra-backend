@@ -143,7 +143,7 @@ const login_user_from_db = async (payload: TLoginPayload) => {
   return {
     accessToken: accessToken,
     refreshToken: refreshToken,
-    role: isExistAccount.role,
+    user: isExistAccount,
   };
 };
 
