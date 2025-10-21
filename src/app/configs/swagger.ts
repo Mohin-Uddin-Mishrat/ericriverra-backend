@@ -13,7 +13,7 @@ export const setupSwagger = (app: Express) => {
       },
       servers: [
         {
-          url: "https://ericriverra-backend.onrender.com/api",
+          url: "https://ericriverra-backend.onrender.com",
           // url: "http://localhost:5000",
           description: "Live server",
         },
