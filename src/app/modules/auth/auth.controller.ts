@@ -11,6 +11,7 @@ import httpStatus from 'http-status';
 
 const register_user = catchAsync(async (req, res) => {
     const result = await auth_services.register_user_into_db(req?.body)
+    console.log('heloo from register', req.body)
     res.cookie('refreshToken', result.refreshToken, {
         secure: configs.env == 'production',
         httpOnly: true,
