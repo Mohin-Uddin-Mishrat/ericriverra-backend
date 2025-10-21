@@ -32,6 +32,7 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
 
     // Create account
     const accountPayload: TAccount = {
+      name:payload.name,
       email: payload.email,
       password: hashPassword,
       lastPasswordChange: new Date(),
@@ -50,6 +51,7 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
 
     const accessToken = jwtHelpers.generateToken(
       {
+        name:payload.name,
         email: payload.email,
         role: payload.role,
       },
@@ -59,6 +61,7 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
 
     const refreshToken = jwtHelpers.generateToken(
       {
+        name:payload.name,
         email: payload.email,
         role: payload.role,
       },

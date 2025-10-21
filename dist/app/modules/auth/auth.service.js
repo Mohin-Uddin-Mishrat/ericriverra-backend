@@ -29,6 +29,7 @@ const register_user_into_db = async (payload) => {
         const hashPassword = bcrypt_1.default.hashSync(payload?.password, 10);
         // Create account
         const accountPayload = {
+            name: payload.name,
             email: payload.email,
             password: hashPassword,
             lastPasswordChange: new Date(),
@@ -42,12 +43,14 @@ const register_user_into_db = async (payload) => {
             name: payload.name,
             accountId: newAccount[0]._id,
         };
-        await user_schema_1.User_Model.create([userPayload], { session });
+        // await User_Model.create([userPayload], { session });
         const accessToken = JWT_1.jwtHelpers.generateToken({
+            name: payload.name,
             email: payload.email,
             role: payload.role,
         }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
         const refreshToken = JWT_1.jwtHelpers.generateToken({
+            name: payload.name,
             email: payload.email,
             role: payload.role,
         }, configs_1.configs.jwt.refresh_token, configs_1.configs.jwt.refresh_expires);
@@ -115,7 +118,7 @@ const login_user_from_db = async (payload) => {
     return {
         accessToken: accessToken,
         refreshToken: refreshToken,
-        role: isExistAccount.role,
+        user: isExistAccount,
     };
 };
 const get_my_profile_from_db = async (email) => {
