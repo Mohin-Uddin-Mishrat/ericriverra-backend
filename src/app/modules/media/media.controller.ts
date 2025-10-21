@@ -1,16 +1,25 @@
 import { Request, Response, NextFunction } from "express";
-import * as mediaService from "./media.service";
+import * as mediaService from "../media/media.service";
 import { JwtPayloadType } from "../../utils/JWT";
-import catchAsync from "../../utils/catch_async";
 import manageResponse from "../../utils/manage_response";
+import catchAsync from "../../utils/catch_async";
+
 
 export const createMediaController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as JwtPayloadType;
     const { title, type, status, description } = req.body;
     const cloudinaryData = req?.cloudinaryData;
+    console.log(cloudinaryData);
 
-    // ✅ Validation: Check file upload
+    if(!user){
+      return manageResponse(res, {
+        statusCode: 401,
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
     if (!req.file) {
       return manageResponse(res, {
         statusCode: 400,
@@ -18,8 +27,6 @@ export const createMediaController = catchAsync(
         message: "File is required",
       });
     }
-
-    // ✅ Validation: Required fields
     if (!title || !type) {
       return manageResponse(res, {
         statusCode: 400,
@@ -27,8 +34,6 @@ export const createMediaController = catchAsync(
         message: "Title and type are required",
       });
     }
-
-    // ✅ Prepare payload for DB
     const payload = {
       userEmail: user.email,
       title: title.trim(),
@@ -38,10 +43,9 @@ export const createMediaController = catchAsync(
       description: description || "",
     };
 
-    // ✅ Create media record in DB
     const result = await mediaService.createMedia(payload);
 
-    // ✅ Send success response
+   
     manageResponse(res, {
       statusCode: 201,
       success: true,
@@ -50,22 +54,20 @@ export const createMediaController = catchAsync(
     });
   }
 );
+
 /**
  * Get all media of the logged-in user by email
  */
-export const getMediaByEmailController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getMediaByEmailController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as JwtPayloadType;
     const email = user.email;
+    console.log(email);
 
     const mediaList = await mediaService.getMediaByUser(email);
 
-    if (!mediaList) {
-      return res.status(404).json({
+    if (!mediaList || mediaList.length === 0) {
+      return manageResponse(res, {
         statusCode: 404,
         success: false,
         message: "No media found for this user",
@@ -73,17 +75,14 @@ export const getMediaByEmailController = async (
       });
     }
 
-    res.status(200).json({
+    manageResponse(res, {
       statusCode: 200,
       success: true,
       message: "Media retrieved successfully",
       data: mediaList,
     });
-  } catch (error: any) {
-    console.error("Get media by email error:", error);
-    next(error);
   }
-};
+);
 
 /**
  * Get media by userEmail (optional: admin can pass email in params)

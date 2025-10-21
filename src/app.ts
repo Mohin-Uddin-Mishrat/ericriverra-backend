@@ -19,6 +19,7 @@ app.use(
       "http://localhost:5176/",
       "http://localhost:3000/",
       "https://eric-rivera-front-end.netlify.app/",
+      '*'
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/v1", appRouter);
+app.use("/api", appRouter);
 
 // stating point
 app.get("/", (req: Request, res: Response) => {

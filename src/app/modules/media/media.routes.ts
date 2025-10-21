@@ -70,6 +70,9 @@ import auth from "../../middlewares/auth";
  *                     title:
  *                       type: string
  *                       example: "Modern Architecture Project"
+ *                     status:
+ *                       type: string
+ *                       example: "draft"
  *                     type:
  *                       type: string
  *                       example: "portfolio"
@@ -181,6 +184,7 @@ const mediaRouter = Router();
 
 mediaRouter.post(
   "/create",
+  auth("USER", "ARCHITECTURE"),
   uploader.single("file"),
   cloudinaryUpload,
   mediaController.createMediaController

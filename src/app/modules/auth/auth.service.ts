@@ -46,7 +46,7 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
       name: payload.name,
       accountId: newAccount[0]!._id,
     };
-    await User_Model.create([userPayload], { session });
+    // await User_Model.create([userPayload], { session });
 
     const accessToken = jwtHelpers.generateToken(
       {

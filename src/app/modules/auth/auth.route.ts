@@ -89,10 +89,10 @@ const authRoute = Router()
  *             properties:
  *               email:
  *                 type: string
- *                 example: user@example.com
+ *                 example: bob.afn@k.com
  *               password:
  *                 type: string
- *                 example: StrongPassword123
+ *                 example: Adminpass455
  *     responses:
  *       200:
  *         description: Login successful
