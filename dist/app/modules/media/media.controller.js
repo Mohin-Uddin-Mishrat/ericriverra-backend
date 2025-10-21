@@ -42,129 +42,114 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMediaByUserController = exports.getMediaByIdController = exports.createMediaController = void 0;
+exports.getMediaByUserController = exports.getMediaByEmailController = exports.createMediaController = void 0;
 const mediaService = __importStar(require("../media/media.service"));
-const createMediaController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const createMediaController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    // const email ='emon@gmail.com'
     try {
-        // Get data from request body
         const { title, type, status, description } = req.body;
         const cloudinaryData = req === null || req === void 0 ? void 0 : req.cloudinaryData;
-        const userId = 'sdfdhfdhfd5435646';
-        // Check if file exists
         if (!req.file) {
             return res.status(400).json({
                 statusCode: 400,
                 success: false,
-                message: 'File is required',
-                data: null
+                message: "File is required",
+                data: null,
             });
         }
-        // Check required fields
         if (!title || !type) {
             return res.status(400).json({
                 statusCode: 400,
                 success: false,
-                message: 'Title and type are required',
-                data: null
+                message: "Title and type are required",
+                data: null,
             });
         }
-        // Convert file path to URL format (backslashes to forward slashes)
-        // const fileUrl = req?.file?.path.replace(/\\/g, '/')|| null;
-        // Create payload object
         const payload = {
-            userId,
+            userEmail: user.email,
             title: title.trim(),
             type,
             fileUrl: cloudinaryData === null || cloudinaryData === void 0 ? void 0 : cloudinaryData.url,
-            status: status || 'regular upload',
-            description: description || ''
+            status: status || "regular upload",
+            description: description || "",
         };
-        // Call service to save to database
         const result = yield mediaService.createMedia(payload);
-        // Send success response
-        return res.status(201).json({
+        res.status(201).json({
             statusCode: 201,
             success: true,
-            message: 'Media created successfully',
-            data: result
+            message: "Media created successfully",
+            data: result,
         });
     }
     catch (error) {
-        console.error('Media creation error:', error);
-        return res.status(500).json({
-            statusCode: 500,
-            success: false,
-            message: 'Failed to create media',
-            error: error.message || 'Unknown error'
-        });
+        console.error("Media creation error:", error);
+        next(error); // pass to global error handler
     }
 });
 exports.createMediaController = createMediaController;
-const getMediaByIdController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+/**
+ * Get all media of the logged-in user by email
+ */
+const getMediaByEmailController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const mediaId = req.params.id;
-        const media = yield mediaService.getMediaById(mediaId);
-        if (!media) {
-            res.status(404).json({
+        const user = req.user;
+        const email = user.email;
+        const mediaList = yield mediaService.getMediaByUser(email);
+        if (!mediaList) {
+            return res.status(404).json({
                 statusCode: 404,
                 success: false,
-                message: 'Media not found',
-                data: null
+                message: "No media found for this user",
+                data: [],
             });
         }
-        else {
-            res.status(200).json({
-                statusCode: 200,
-                success: true,
-                message: 'Media retrieved successfully',
-                data: media
-            });
-        }
+        res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "Media retrieved successfully",
+            data: mediaList,
+        });
     }
     catch (error) {
-        console.error('Get media by ID error:', error);
-        res.status(500).json({
-            statusCode: 500,
-            success: false,
-            message: 'Failed to get media by ID',
-            error: error.message || 'Unknown error'
-        });
+        console.error("Get media by email error:", error);
+        next(error);
     }
 });
-exports.getMediaByIdController = getMediaByIdController;
-const getMediaByUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req === null || req === void 0 ? void 0 : req.params.userId;
-    const medialist = yield mediaService.getMediaByUser(userId);
+exports.getMediaByEmailController = getMediaByEmailController;
+/**
+ * Get media by userEmail (optional: admin can pass email in params)
+ */
+const getMediaByUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!medialist) {
-            res.status(404).json({
+        const email = req.params.userEmail; // fetch from route params
+        if (!email) {
+            return res.status(400).json({
+                statusCode: 400,
+                success: false,
+                message: "User email is required",
+                data: null,
+            });
+        }
+        const mediaList = yield mediaService.getMediaByEmail(email);
+        if (!mediaList) {
+            return res.status(404).json({
                 statusCode: 404,
                 success: false,
-                message: 'Media not found',
-                data: null
+                message: "No media found for this user",
+                data: [],
             });
         }
-        else {
-            res.status(200).json({
-                statusCode: 200,
-                success: true,
-                message: 'Media retrieved successfully',
-                data: medialist
-            });
-        }
+        res.status(200).json({
+            statusCode: 200,
+            success: true,
+            message: "Media retrieved successfully",
+            data: mediaList,
+        });
     }
     catch (error) {
-        console.error('Get media by ID error:', error);
-        res.status(500).json({
-            statusCode: 500,
-            success: false,
-            message: 'Failed to get media by ID',
-            error: error.message || 'Unknown error'
-        });
+        console.error("Get media by user error:", error);
+        next(error);
     }
 });
 exports.getMediaByUserController = getMediaByUserController;
-// const getAllMediaController = async (req: Request, res: Response)=>{
-//     try{
-//     }
-// }

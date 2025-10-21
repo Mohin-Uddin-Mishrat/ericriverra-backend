@@ -5,7 +5,7 @@ import { jwtHelpers, JwtPayloadType } from '../utils/JWT';
 import { Account_Model } from '../modules/auth/auth.schema';
 
 
-type Role = "ADMIN" | "USER"
+type Role = "ARCHITECTURE" | "USER"
 
 
 const auth = (...roles: Role[]) => {

@@ -40,11 +40,10 @@ const express_1 = require("express");
 const mediaController = __importStar(require("../media/media.controller"));
 const uploader_1 = __importDefault(require("../../middlewares/uploader"));
 const cloudinaryUpload_1 = __importDefault(require("../../middlewares/cloudinaryUpload"));
+const auth_1 = __importDefault(require("../../middlewares/auth"));
 const mediaRouter = (0, express_1.Router)();
-// POST route for creating media with file upload
-// 'file' is the form field name - use this in your frontend
-mediaRouter.post("/create", uploader_1.default.single("file"), // 'file' is the field name
-cloudinaryUpload_1.default, mediaController.createMediaController);
-mediaRouter.get("/:id", mediaController.getMediaByIdController);
-mediaRouter.get("/user/:userId", mediaController.getMediaByUserController);
+mediaRouter.post("/create", uploader_1.default.single("file"), cloudinaryUpload_1.default, mediaController.createMediaController);
+mediaRouter.get("/me", (0, auth_1.default)("USER", "ARCHITECTURE"), mediaController.getMediaByEmailController);
+// GET /media/user/:userEmail - Get media of any user (admin/other users)
+mediaRouter.get("/:userEmail", (0, auth_1.default)("USER", "ARCHITECTURE"), mediaController.getMediaByUserController);
 exports.default = mediaRouter;

@@ -35,10 +35,11 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importStar(require("mongoose"));
 const mediaSchema = new mongoose_1.Schema({
-    userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Users',
-        required: [true, 'User ID is required']
+    userEmail: {
+        type: String,
+        required: [true, 'User email is required'],
+        trim: true,
+        maxlength: [100, 'User email cannot exceed 100 characters']
     },
     title: {
         type: String,

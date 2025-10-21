@@ -9,7 +9,7 @@ const uploader_1 = __importDefault(require("../../middlewares/uploader"));
 const user_validation_1 = require("./user.validation");
 const auth_1 = __importDefault(require("../../middlewares/auth"));
 const userRoute = (0, express_1.Router)();
-userRoute.patch("/update-profile", (0, auth_1.default)("ADMIN", "USER"), uploader_1.default.single("image"), (req, res, next) => {
+userRoute.patch("/update-profile", (0, auth_1.default)("ARCHITECTURE", "USER"), uploader_1.default.single("image"), (req, res, next) => {
     var _a;
     req.body = user_validation_1.user_validations.update_user.parse(JSON.parse((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.data));
     user_controller_1.user_controllers.update_profile(req, res, next);

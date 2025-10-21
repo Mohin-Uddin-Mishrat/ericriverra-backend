@@ -12,10 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMediaByUser = exports.deleteMediaById = exports.getMediaById = exports.createMedia = void 0;
+exports.getMediaByUser = exports.deleteMediaByEmail = exports.getMediaByEmail = exports.createMedia = void 0;
 const media_schema_1 = __importDefault(require("../media/media.schema"));
 const createMedia = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log('from media services..................');
     try {
         const media = yield media_schema_1.default.create(payload);
         return media;
@@ -25,30 +24,31 @@ const createMedia = (payload) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.createMedia = createMedia;
-const getMediaById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+const getMediaByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const media = yield media_schema_1.default.findById(id);
+        const media = yield media_schema_1.default.find({ userEmail: email });
+        //  console.log(media);
         return media;
     }
     catch (error) {
-        throw new Error(`Failed to get media by ID: ${error}`);
+        throw new Error(`Failed to get media by email: ${error}`);
     }
 });
-exports.getMediaById = getMediaById;
-const deleteMediaById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getMediaByEmail = getMediaByEmail;
+const deleteMediaByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const media = yield media_schema_1.default.findByIdAndDelete(id);
+        const media = yield media_schema_1.default.findOneAndDelete({ userEmail: email });
         return media;
     }
     catch (error) {
-        throw new Error(`Failed to delete media by ID: ${error}`);
+        throw new Error(`Failed to delete media by email: ${error}`);
     }
 });
-exports.deleteMediaById = deleteMediaById;
-const getMediaByUser = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteMediaByEmail = deleteMediaByEmail;
+const getMediaByUser = (email) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Find all media where the userId matches
-        const mediaList = yield media_schema_1.default.find({ userId }).sort({ createdAt: -1 });
+        // Find all media where the userEmail matches
+        const mediaList = yield media_schema_1.default.find({ userEmail: email }).sort({ createdAt: -1 });
         return mediaList;
     }
     catch (error) {
