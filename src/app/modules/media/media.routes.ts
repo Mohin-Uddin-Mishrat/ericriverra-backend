@@ -15,14 +15,14 @@ mediaRouter.post(
 
 mediaRouter.get(
   "/me",
-  // auth("USER", "ARCHITECTURE"),
+  auth("USER", "ARCHITECTURE"),
   mediaController.getMediaByEmailController
 );
 
 // GET /media/user/:userEmail - Get media of any user (admin/other users)
 mediaRouter.get(
   "/:userEmail",
-  // auth("USER", "ARCHITECTURE"),
+  auth("USER", "ARCHITECTURE"),
   mediaController.getMediaByUserController
 );
 
