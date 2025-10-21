@@ -11,10 +11,12 @@ type Role = "ARCHITECTURE" | "USER"
 const auth = (...roles: Role[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const token = req.headers.authorization;
-            if (!token) {
+            const tokenHeader = req.headers.authorization;
+            if (!tokenHeader) {
                 throw new AppError('You are not authorize!!', 401);
             }
+            const token = tokenHeader.split(" ")[1]  ;
+
             const verifiedUser = jwtHelpers.verifyToken(
                 token,
                 configs.jwt.access_token as string,
@@ -37,6 +39,7 @@ const auth = (...roles: Role[]) => {
                 throw new AppError("This account is not verified ", 401)
             }
             req.user = verifiedUser as JwtPayloadType;
+            console.log(verifiedUser)
             next();
         } catch (err) {
             next(err);
