@@ -6,6 +6,12 @@ import uploadCloud from "../utils/cloudinary";
 //   format: string;
 //   resource_type: string;
 // }
+export interface TCloudinaryResponse {
+  url: string;
+  public_id: string;
+  format: string;
+  resource_type: string;
+}
 
 const cloudinaryUpload = async (req: any, res: any, next: any) => {
   try {

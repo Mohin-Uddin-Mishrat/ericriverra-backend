@@ -1,12 +1,12 @@
+import { TCloudinaryResponse } from "../middlewares/cloudinaryUpload";
 import { TJwtUser } from "../modules/auth/auth.interface";
 import { JwtPayloadType } from "../utils/JWT";
 
-
-
 declare global {
-    namespace Express {
-        interface Request {
-            user?: JwtPayloadType;
-        }
+  namespace Express {
+    interface Request {
+      user?: JwtPayloadType;
+      cloudinaryData?: TCloudinaryResponse;
     }
+  }
 }
