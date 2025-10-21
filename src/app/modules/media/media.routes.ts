@@ -15,10 +15,20 @@ import auth from "../../middlewares/auth";
 
 /**
  * @swagger
- * /api/v1/media/create:
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
+ * @swagger
+ * /api/media/create:
  *   post:
  *     summary: Upload a media file
- *     description: Allows a user to upload a media file (image, video, etc.) with metadata like title, description, and type.
+ *     description: Allows an authenticated user to upload a media file (image, video, etc.) with metadata like title, description, and type.
  *     tags: [Media]
  *     security:
  *       - bearerAuth: []
@@ -84,13 +94,35 @@ import auth from "../../middlewares/auth";
  *                       example: "A personal portfolio showcasing architectural design."
  *       400:
  *         description: Bad request (missing or invalid data)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required fields"
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized – token missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  */
 
 /**
  * @swagger
- * /api/v1/media/me:
+ * /api/media/me:
  *   get:
  *     summary: Get logged-in user's uploaded media
  *     description: Retrieves all media uploaded by the currently authenticated user.
@@ -125,11 +157,24 @@ import auth from "../../middlewares/auth";
  *                       description:
  *                         type: string
  *                         example: "A brief project summary"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  */
 
 /**
  * @swagger
- * /api/v1/media/{userEmail}:
+ * /api/media/{userEmail}:
  *   get:
  *     summary: Get media by user email
  *     description: Fetch all media uploaded by a specific user (admin or authorized users only).
@@ -174,8 +219,30 @@ import auth from "../../middlewares/auth";
  *                         example: "A detailed case study"
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  *       404:
  *         description: No media found for the specified user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "No media found for this user"
  */
 
 
