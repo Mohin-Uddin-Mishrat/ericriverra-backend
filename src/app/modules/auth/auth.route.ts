@@ -141,7 +141,7 @@ authRoute.post(
  *     summary: Update user profile
  *     description: Allows an authenticated user to update their profile information such as name, bio, phone number, or company name.
  *     tags:
- *       - Auth
+ *       - Authentication
  *     security:
  *       - bearerAuth: []
  *     requestBody:
