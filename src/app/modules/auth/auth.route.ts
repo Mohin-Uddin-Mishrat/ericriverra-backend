@@ -139,86 +139,67 @@ authRoute.post(
  * /api/v1/auth/update-profile:
  *   patch:
  *     summary: Update user profile
- *     description: Update the authenticated user's profile information including name, bio, phone number, company name, and profile image
+ *     description: Allows an authenticated user to update their profile information such as name, bio, phone number, or company name.
  *     tags:
- *       - Authentication
+ *       - Auth
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
- *                 description: User's full name
- *                 example: John Doe
+ *                 example: "John Doe"
  *               bio:
  *                 type: string
- *                 description: User's biography
- *                 example: Software developer with 5 years of experience
+ *                 example: "Software Engineer at XYZ Corp."
  *               phoneNumber:
  *                 type: string
- *                 description: User's phone number
- *                 example: +1234567890
+ *                 example: "+8801712345678"
  *               companyName:
  *                 type: string
- *                 description: User's company name
- *                 example: Tech Solutions Inc.
- *               file:
- *                 type: string
- *                 format: binary
- *                 description: Profile image file (will be uploaded to Cloudinary)
+ *                 example: "Tech Solutions Ltd."
  *     responses:
  *       200:
- *         description: Profile updated successfully
+ *         description: User profile updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 statusCode:
- *                   type: integer
- *                   example: 200
  *                 success:
  *                   type: boolean
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User profile fetched successfully!
+ *                   example: "User profile fetched successfully!"
  *                 data:
  *                   type: object
  *                   properties:
- *                     _id:
- *                       type: string
- *                       example: 507f1f77bcf86cd799439011
- *                     email:
- *                       type: string
- *                       example: user@example.com
  *                     name:
  *                       type: string
- *                       example: John Doe
+ *                       example: "John Doe"
  *                     bio:
  *                       type: string
- *                       example: Software developer with 5 years of experience
+ *                       example: "Software Engineer at XYZ Corp."
  *                     phoneNumber:
  *                       type: string
- *                       example: +1234567890
+ *                       example: "+8801712345678"
  *                     companyName:
  *                       type: string
- *                       example: Tech Solutions Inc.
- *                     imagUrl:
- *                       type: string
- *                       example: https://res.cloudinary.com/demo/image/upload/v1234567890/profile.jpg
+ *                       example: "Tech Solutions Ltd."
  *       401:
- *         description: Unauthorized - Invalid or missing token
- *       403:
- *         description: Forbidden - User role not authorized
+ *         description: Unauthorized – Missing or invalid token
+ *       404:
+ *         description: User not found
  *       500:
  *         description: Internal server error
  */
+
 authRoute.patch(
   "/update-profile",
   auth("ARCHITECTURE", "USER"),
