@@ -6,13 +6,14 @@ const authSchema = new Schema<TAccount>(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
-    phoneNumber: { type: String },
+    phoneNumber: { type: String, default:null },
     password: { type: String, required: true },
     lastPasswordChange: { type: String },
-    companyName:{type:String},
+    companyName: { type: String, default:null },
     isDeleted: { type: Boolean, default: false },
     accountStatus: { type: String, default: "ACTIVE" },
-    bio:{type:String},
+    imagUrl: { type: String, default:null },
+    bio: { type: String, default:null },
     role: {
       type: String,
       enum: ["ADMIN", "USER", "ARCHITECTURE"],

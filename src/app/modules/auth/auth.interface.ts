@@ -3,6 +3,7 @@ export type TAccount = {
     email: string;
     password: string;
     bio?:string;
+    imagUrl?:string;
     lastPasswordChange?: Date;
     isDeleted?: boolean;
     phoneNumber?:string;
@@ -17,6 +18,7 @@ export type TUpdateProfilePayload = {
   bio?: string;
   phoneNumber?: string;
   companyName?: string;
+  imagUrl?:string;
 };
 export interface TRegisterPayload extends TAccount {
     name: string
