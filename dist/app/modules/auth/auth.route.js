@@ -8,6 +8,9 @@ const auth_controller_1 = require("./auth.controller");
 const request_validator_1 = __importDefault(require("../../middlewares/request_validator"));
 const auth_validation_1 = require("./auth.validation");
 const auth_1 = __importDefault(require("../../middlewares/auth"));
+const uploader_1 = __importDefault(require("../../middlewares/uploader"));
+const cloudinaryUpload_1 = __importDefault(require("../../middlewares/cloudinaryUpload"));
+const optionalUpload_1 = require("../../middlewares/optionalUpload");
 const authRoute = (0, express_1.Router)();
 /**
  * @swagger
@@ -122,59 +125,95 @@ const authRoute = (0, express_1.Router)();
  *                       type: string
  *                       example: USER
  */
-authRoute.post("/register", (0, request_validator_1.default)(auth_validation_1.auth_validation.register_validation), auth_controller_1.auth_controllers.register_user);
-authRoute.post("/login", (0, request_validator_1.default)(auth_validation_1.auth_validation.login_validation), auth_controller_1.auth_controllers.login_user);
 /**
  * @swagger
- * /api/v1/auth/test:
- *   get:
- *     summary: Test protected route
- *     description: A simple test endpoint to check if the server is running and the user is authenticated with roles ARCHITECTURE or USER.
+ * /api/v1/auth/update-profile:
+ *   patch:
+ *     summary: Update user profile
+ *     description: Update the authenticated user's profile information including name, bio, phone number, company name, and profile image
  *     tags:
  *       - Authentication
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: User's full name
+ *                 example: John Doe
+ *               bio:
+ *                 type: string
+ *                 description: User's biography
+ *                 example: Software developer with 5 years of experience
+ *               phoneNumber:
+ *                 type: string
+ *                 description: User's phone number
+ *                 example: +1234567890
+ *               companyName:
+ *                 type: string
+ *                 description: User's company name
+ *                 example: Tech Solutions Inc.
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file (will be uploaded to Cloudinary)
  *     responses:
  *       200:
- *         description: Server is running and user is authorized
+ *         description: Profile updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 status:
- *                   type: string
- *                   example: success
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 success:
+ *                   type: boolean
+ *                   example: true
  *                 message:
  *                   type: string
- *                   example: Server is running successful !!
+ *                   example: User profile fetched successfully!
  *                 data:
- *                   type: null
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 507f1f77bcf86cd799439011
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     bio:
+ *                       type: string
+ *                       example: Software developer with 5 years of experience
+ *                     phoneNumber:
+ *                       type: string
+ *                       example: +1234567890
+ *                     companyName:
+ *                       type: string
+ *                       example: Tech Solutions Inc.
+ *                     imagUrl:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/demo/image/upload/v1234567890/profile.jpg
  *       401:
- *         description: Unauthorized - invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: fail
- *                 message:
- *                   type: string
- *                   example: Unauthorized
- *                 data:
- *                   type: null
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User role not authorized
+ *       500:
+ *         description: Internal server error
  */
-authRoute.get("/test", (0, auth_1.default)("ARCHITECTURE", "USER"), (req, res) => {
-    console.log("hello from test");
-    res.status(200).json({
-        status: "success",
-        message: "hello from test",
-        data: null,
-    });
-});
+authRoute.post("/register", (0, request_validator_1.default)(auth_validation_1.auth_validation.register_validation), auth_controller_1.auth_controllers.register_user);
+authRoute.post("/login", (0, request_validator_1.default)(auth_validation_1.auth_validation.login_validation), auth_controller_1.auth_controllers.login_user);
 authRoute.get("/me", (0, auth_1.default)("ARCHITECTURE", "USER"), auth_controller_1.auth_controllers.get_my_profile);
+authRoute.patch("/update-profile", (0, auth_1.default)("ARCHITECTURE", "USER"), (0, optionalUpload_1.optionalFileUpload)(uploader_1.default.single("file")), (0, optionalUpload_1.optionalCloudinaryUpload)(cloudinaryUpload_1.default), auth_controller_1.auth_controllers.update_my_profile);
 authRoute.post("/refresh-token", auth_controller_1.auth_controllers.refresh_token);
 authRoute.post("/change-password", (0, auth_1.default)("ARCHITECTURE", "USER"), (0, request_validator_1.default)(auth_validation_1.auth_validation.changePassword), auth_controller_1.auth_controllers.change_password);
 authRoute.post("/forgot-password", (0, request_validator_1.default)(auth_validation_1.auth_validation.forgotPassword), auth_controller_1.auth_controllers.forget_password);

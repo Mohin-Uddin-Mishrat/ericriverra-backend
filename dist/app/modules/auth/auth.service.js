@@ -54,35 +54,7 @@ const register_user_into_db = async (payload) => {
             email: payload.email,
             role: payload.role,
         }, configs_1.configs.jwt.refresh_token, configs_1.configs.jwt.refresh_expires);
-        // make verified link
-        // const verifiedToken = jwtHelpers.generateToken(
-        //     {
-        //         email: payload?.email
-        //     },
-        //     configs.jwt.verified_token as Secret,
-        //     '5m'
-        // );
-        // const verificationLink = `${configs.jwt.front_end_url}/verified?token=${verifiedToken}`;
-        // Commit the transaction
         await session.commitTransaction();
-        // await sendMail({
-        //     to: payload?.email,
-        //     subject: "Thanks for creating account!",
-        //     textBody: `New Account successfully created on ${new Date().toLocaleDateString()}`,
-        //     name: payload?.name,
-        //     htmlBody: `
-        //     <p>Thanks for creating an account with us. We’re excited to have you on board! Click the button below to
-        //         verify your email and activate your account:</p>
-        //     <div style="text-align: center; margin: 30px 0;">
-        //         <a href="${verificationLink}" target="_blank"
-        //             style="background-color: #4CAF50; color: #ffffff; padding: 14px 28px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block; font-size: 18px;"
-        //             class="btn">
-        //             Verify My Email
-        //         </a>
-        //     </div>
-        //     <p>If you did not create this account, please ignore this email.</p>
-        //     `
-        // })
         return {
             newAccount,
             accessToken,
@@ -108,10 +80,12 @@ const login_user_from_db = async (payload) => {
         throw new app_error_1.AppError("Invalid password", http_status_1.default.UNAUTHORIZED);
     }
     const accessToken = JWT_1.jwtHelpers.generateToken({
+        name: isExistAccount.name,
         email: isExistAccount.email,
         role: isExistAccount.role,
     }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
     const refreshToken = JWT_1.jwtHelpers.generateToken({
+        name: isExistAccount.name,
         email: isExistAccount.email,
         role: isExistAccount.role,
     }, configs_1.configs.jwt.refresh_token, configs_1.configs.jwt.refresh_expires);
@@ -119,6 +93,14 @@ const login_user_from_db = async (payload) => {
         accessToken: accessToken,
         refreshToken: refreshToken,
         user: isExistAccount,
+    };
+};
+// update profile
+const update_my_profile_to_db = async (email, payload) => {
+    const isExistAccount = await (0, isAccountExist_1.isAccountExist)(email);
+    const updatedAccount = await auth_schema_1.Account_Model.findOneAndUpdate({ email }, { $set: payload }, { new: true }).select("-password");
+    return {
+        data: updatedAccount,
     };
 };
 const get_my_profile_from_db = async (email) => {
@@ -253,5 +235,6 @@ exports.auth_services = {
     reset_password_into_db,
     verified_account_into_db,
     get_new_verification_link_from_db,
+    update_my_profile_to_db
 };
 //# sourceMappingURL=auth.service.js.map
