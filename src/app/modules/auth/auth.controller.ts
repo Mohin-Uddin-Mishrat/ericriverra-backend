@@ -49,6 +49,17 @@ const login_user = catchAsync(async (req, res) => {
   });
 });
 
+const update_my_profile = catchAsync(async (req, res) => {
+  const { email } = req.user!;
+  const result = await auth_services.update_my_profile_to_db(email, req?.body);
+  manageResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User profile fetched successfully!",
+    data: result.data,
+  });
+});
+
 const get_my_profile = catchAsync(async (req, res) => {
   const { email } = req.user!;
   const result = await auth_services.get_my_profile_from_db(email);
@@ -142,4 +153,5 @@ export const auth_controllers = {
   forget_password,
   verified_account,
   get_new_verification_link,
+  update_my_profile,
 };

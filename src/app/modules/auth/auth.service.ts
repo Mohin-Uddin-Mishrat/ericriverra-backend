@@ -1,5 +1,5 @@
 import { AppError } from "../../utils/app_error";
-import { TAccount, TLoginPayload, TRegisterPayload } from "./auth.interface";
+import { TAccount, TLoginPayload, TRegisterPayload, TUpdateProfilePayload } from "./auth.interface";
 import { Account_Model } from "./auth.schema";
 import httpStatus from "http-status";
 import bcrypt from "bcrypt";
@@ -68,37 +68,9 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
       configs.jwt.refresh_token as Secret,
       configs.jwt.refresh_expires as string
     );
-    // make verified link
-    // const verifiedToken = jwtHelpers.generateToken(
-    //     {
-    //         email: payload?.email
-    //     },
-    //     configs.jwt.verified_token as Secret,
-    //     '5m'
-    // );
-    // const verificationLink = `${configs.jwt.front_end_url}/verified?token=${verifiedToken}`;
-    // Commit the transaction
+
     await session.commitTransaction();
-    // await sendMail({
-    //     to: payload?.email,
-    //     subject: "Thanks for creating account!",
-    //     textBody: `New Account successfully created on ${new Date().toLocaleDateString()}`,
-    //     name: payload?.name,
-    //     htmlBody: `
-    //     <p>Thanks for creating an account with us. We’re excited to have you on board! Click the button below to
-    //         verify your email and activate your account:</p>
 
-    //     <div style="text-align: center; margin: 30px 0;">
-    //         <a href="${verificationLink}" target="_blank"
-    //             style="background-color: #4CAF50; color: #ffffff; padding: 14px 28px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block; font-size: 18px;"
-    //             class="btn">
-    //             Verify My Email
-    //         </a>
-    //     </div>
-
-    //     <p>If you did not create this account, please ignore this email.</p>
-    //     `
-    // })
     return {
       newAccount,
       accessToken,
@@ -128,6 +100,7 @@ const login_user_from_db = async (payload: TLoginPayload) => {
   }
   const accessToken = jwtHelpers.generateToken(
     {
+      name:isExistAccount.name,
       email: isExistAccount.email,
       role: isExistAccount.role,
     },
@@ -137,6 +110,7 @@ const login_user_from_db = async (payload: TLoginPayload) => {
 
   const refreshToken = jwtHelpers.generateToken(
     {
+      name:isExistAccount.name,
       email: isExistAccount.email,
       role: isExistAccount.role,
     },
@@ -150,6 +124,18 @@ const login_user_from_db = async (payload: TLoginPayload) => {
   };
 };
 
+// update profile
+const update_my_profile_to_db = async (email: string,payload:TUpdateProfilePayload) => {
+  const isExistAccount = await isAccountExist(email);
+   const updatedAccount = await Account_Model.findOneAndUpdate(
+  { email },
+  { $set: payload },
+  { new: true } 
+).select("-password");
+  return {
+    data: updatedAccount,
+  };
+};
 const get_my_profile_from_db = async (email: string) => {
   const isExistAccount = await isAccountExist(email);
   const accountProfile = await User_Model.findOne({
@@ -348,4 +334,5 @@ export const auth_services = {
   reset_password_into_db,
   verified_account_into_db,
   get_new_verification_link_from_db,
+  update_my_profile_to_db
 };
