@@ -79,12 +79,12 @@ const login_user_from_db = async (payload) => {
     if (!isPasswordMatch) {
         throw new app_error_1.AppError("Invalid password", http_status_1.default.UNAUTHORIZED);
     }
-    const accessToken = JWT_1.jwtHelpers.generateToken({
+    const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: isExistAccount?.imagUrl,
         name: isExistAccount.name,
         email: isExistAccount.email,
         role: isExistAccount.role,
     }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
-    const refreshToken = JWT_1.jwtHelpers.generateToken({
+    const refreshToken = JWT_1.jwtHelpers.generateToken({ imagUrl: isExistAccount?.imagUrl,
         name: isExistAccount.name,
         email: isExistAccount.email,
         role: isExistAccount.role,

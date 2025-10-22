@@ -99,7 +99,7 @@ const login_user_from_db = async (payload: TLoginPayload) => {
     throw new AppError("Invalid password", httpStatus.UNAUTHORIZED);
   }
   const accessToken = jwtHelpers.generateToken(
-    {
+    { imagUrl:isExistAccount?.imagUrl,
       name:isExistAccount.name,
       email: isExistAccount.email,
       role: isExistAccount.role,
@@ -109,7 +109,7 @@ const login_user_from_db = async (payload: TLoginPayload) => {
   );
 
   const refreshToken = jwtHelpers.generateToken(
-    {
+    { imagUrl:isExistAccount?.imagUrl,
       name:isExistAccount.name,
       email: isExistAccount.email,
       role: isExistAccount.role,
