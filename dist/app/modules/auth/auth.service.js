@@ -44,12 +44,12 @@ const register_user_into_db = async (payload) => {
             accountId: newAccount[0]._id,
         };
         // await User_Model.create([userPayload], { session });
-        const accessToken = JWT_1.jwtHelpers.generateToken({
+        const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl,
             name: payload.name,
             email: payload.email,
             role: payload.role,
         }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
-        const refreshToken = JWT_1.jwtHelpers.generateToken({
+        const refreshToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl,
             name: payload.name,
             email: payload.email,
             role: payload.role,
