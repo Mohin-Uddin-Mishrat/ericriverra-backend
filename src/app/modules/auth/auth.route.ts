@@ -236,7 +236,8 @@ authRoute.patch(
   optionalFileUpload(uploader.single("file")),
   optionalCloudinaryUpload(cloudinaryUpload),
   auth_controllers.update_my_profile
-);authRoute.post("/refresh-token", auth_controllers.refresh_token);
+);
+authRoute.post("/refresh-token", auth_controllers.refresh_token);
 authRoute.post(
   "/change-password",
   auth("ARCHITECTURE", "USER"),
