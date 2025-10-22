@@ -121,6 +121,73 @@ const authRoute = Router();
  *                       example: USER
  */
 
+/**
+ * @swagger
+ * /api/v1/auth/update-profile:
+ *   patch:
+ *     summary: Update user profile
+ *     description: Allows an authenticated user to update their profile information such as name, bio, phone number, or company name.
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               bio:
+ *                 type: string
+ *                 example: "Software Engineer at XYZ Corp."
+ *               phoneNumber:
+ *                 type: string
+ *                 example: "+8801712345678"
+ *               companyName:
+ *                 type: string
+ *                 example: "Tech Solutions Ltd."
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "User profile fetched successfully!"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: "John Doe"
+ *                     bio:
+ *                       type: string
+ *                       example: "Software Engineer at XYZ Corp."
+ *                     phoneNumber:
+ *                       type: string
+ *                       example: "+8801712345678"
+ *                     companyName:
+ *                       type: string
+ *                       example: "Tech Solutions Ltd."
+ *       401:
+ *         description: Unauthorized – Missing or invalid token
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+
+
 authRoute.post(
   "/register",
   RequestValidator(auth_validation.register_validation),
@@ -133,68 +200,12 @@ authRoute.post(
 );
 
 
-/**
- * @swagger
- * /api/v1/auth/test:
- *   get:
- *     summary: Test protected route
- *     description: A simple test endpoint to check if the server is running and the user is authenticated with roles ARCHITECTURE or USER.
- *     tags:
- *       - Authentication
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Server is running and user is authorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: success
- *                 message:
- *                   type: string
- *                   example: Server is running successful !!
- *                 data:
- *                   type: null
- *       401:
- *         description: Unauthorized - invalid or missing token
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: fail
- *                 message:
- *                   type: string
- *                   example: Unauthorized
- *                 data:
- *                   type: null
- */
-
-authRoute.get(
-  "/test",
-  auth("ARCHITECTURE", "USER"),
-  (req: Request, res: Response) => {
-    console.log("hello from test")
-    res.status(200).json({
-      status: "success",
-      message: "hello from test",
-      data: null,
-    });
-  }
-);
-
 authRoute.get(
   "/me",
   auth("ARCHITECTURE", "USER"),
   auth_controllers.get_my_profile
 );
-
+authRoute.patch("/update-profile",auth("ARCHITECTURE","USER"), auth_controllers.update_my_profile)
 authRoute.post("/refresh-token", auth_controllers.refresh_token);
 authRoute.post(
   "/change-password",
