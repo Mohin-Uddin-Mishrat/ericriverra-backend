@@ -51,6 +51,11 @@ const login_user = catchAsync(async (req, res) => {
 
 const update_my_profile = catchAsync(async (req, res) => {
   const { email } = req.user!;
+  const cloudinaryData = req?.cloudinaryData;
+  if (cloudinaryData?.url) {
+    req.body.imagUrl = cloudinaryData.url;
+  }
+  console.log(cloudinaryData);
   const result = await auth_services.update_my_profile_to_db(email, req?.body);
   manageResponse(res, {
     statusCode: httpStatus.OK,

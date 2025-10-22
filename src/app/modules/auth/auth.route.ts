@@ -3,6 +3,9 @@ import { auth_controllers } from "./auth.controller";
 import RequestValidator from "../../middlewares/request_validator";
 import { auth_validation } from "./auth.validation";
 import auth from "../../middlewares/auth";
+import uploader from "../../middlewares/uploader";
+import cloudinaryUpload from "../../middlewares/cloudinaryUpload";
+import { optionalCloudinaryUpload, optionalFileUpload } from "../../middlewares/optionalUpload";
 
 const authRoute = Router();
 
@@ -121,72 +124,93 @@ const authRoute = Router();
  *                       example: USER
  */
 
+
+
 /**
  * @swagger
  * /api/v1/auth/update-profile:
  *   patch:
  *     summary: Update user profile
- *     description: Allows an authenticated user to update their profile information such as name, bio, phone number, or company name.
+ *     description: Update the authenticated user's profile information including name, bio, phone number, company name, and profile image
  *     tags:
- *       - Auth
+ *       - Authentication
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               name:
  *                 type: string
- *                 example: "John Doe"
+ *                 description: User's full name
+ *                 example: John Doe
  *               bio:
  *                 type: string
- *                 example: "Software Engineer at XYZ Corp."
+ *                 description: User's biography
+ *                 example: Software developer with 5 years of experience
  *               phoneNumber:
  *                 type: string
- *                 example: "+8801712345678"
+ *                 description: User's phone number
+ *                 example: +1234567890
  *               companyName:
  *                 type: string
- *                 example: "Tech Solutions Ltd."
+ *                 description: User's company name
+ *                 example: Tech Solutions Inc.
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file (will be uploaded to Cloudinary)
  *     responses:
  *       200:
- *         description: User profile updated successfully
+ *         description: Profile updated successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
  *                 success:
  *                   type: boolean
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "User profile fetched successfully!"
+ *                   example: User profile fetched successfully!
  *                 data:
  *                   type: object
  *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 507f1f77bcf86cd799439011
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
  *                     name:
  *                       type: string
- *                       example: "John Doe"
+ *                       example: John Doe
  *                     bio:
  *                       type: string
- *                       example: "Software Engineer at XYZ Corp."
+ *                       example: Software developer with 5 years of experience
  *                     phoneNumber:
  *                       type: string
- *                       example: "+8801712345678"
+ *                       example: +1234567890
  *                     companyName:
  *                       type: string
- *                       example: "Tech Solutions Ltd."
+ *                       example: Tech Solutions Inc.
+ *                     imagUrl:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/demo/image/upload/v1234567890/profile.jpg
  *       401:
- *         description: Unauthorized – Missing or invalid token
- *       404:
- *         description: User not found
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User role not authorized
  *       500:
  *         description: Internal server error
  */
-
 
 authRoute.post(
   "/register",
@@ -205,8 +229,14 @@ authRoute.get(
   auth("ARCHITECTURE", "USER"),
   auth_controllers.get_my_profile
 );
-authRoute.patch("/update-profile",auth("ARCHITECTURE","USER"), auth_controllers.update_my_profile)
-authRoute.post("/refresh-token", auth_controllers.refresh_token);
+
+authRoute.patch(
+  "/update-profile",
+  auth("ARCHITECTURE", "USER"),
+  optionalFileUpload(uploader.single("file")),
+  optionalCloudinaryUpload(cloudinaryUpload),
+  auth_controllers.update_my_profile
+);authRoute.post("/refresh-token", auth_controllers.refresh_token);
 authRoute.post(
   "/change-password",
   auth("ARCHITECTURE", "USER"),
