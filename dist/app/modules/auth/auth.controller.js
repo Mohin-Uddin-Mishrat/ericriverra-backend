@@ -50,6 +50,21 @@ const login_user = (0, catch_async_1.default)(async (req, res) => {
         },
     });
 });
+const update_my_profile = (0, catch_async_1.default)(async (req, res) => {
+    const { email } = req.user;
+    const cloudinaryData = req?.cloudinaryData;
+    if (cloudinaryData?.url) {
+        req.body.imagUrl = cloudinaryData.url;
+    }
+    console.log(cloudinaryData);
+    const result = await auth_service_1.auth_services.update_my_profile_to_db(email, req?.body);
+    (0, manage_response_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User profile fetched successfully!",
+        data: result.data,
+    });
+});
 const get_my_profile = (0, catch_async_1.default)(async (req, res) => {
     const { email } = req.user;
     const result = await auth_service_1.auth_services.get_my_profile_from_db(email);
@@ -128,5 +143,6 @@ exports.auth_controllers = {
     forget_password,
     verified_account,
     get_new_verification_link,
+    update_my_profile,
 };
 //# sourceMappingURL=auth.controller.js.map

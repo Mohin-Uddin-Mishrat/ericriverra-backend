@@ -1,4 +1,4 @@
-import { TAccount, TLoginPayload, TRegisterPayload } from "./auth.interface";
+import { TAccount, TLoginPayload, TRegisterPayload, TUpdateProfilePayload } from "./auth.interface";
 import { TUser } from "../user/user.interface";
 import mongoose from "mongoose";
 import { JwtPayload } from "jsonwebtoken";
@@ -46,5 +46,12 @@ export declare const auth_services: {
         __v: number;
     }) | null>;
     get_new_verification_link_from_db: (email: string) => Promise<null>;
+    update_my_profile_to_db: (email: string, payload: TUpdateProfilePayload) => Promise<{
+        data: (mongoose.Document<unknown, {}, TAccount, {}, mongoose.DefaultSchemaOptions> & TAccount & {
+            _id: mongoose.Types.ObjectId;
+        } & {
+            __v: number;
+        }) | null;
+    }>;
 };
 //# sourceMappingURL=auth.service.d.ts.map
