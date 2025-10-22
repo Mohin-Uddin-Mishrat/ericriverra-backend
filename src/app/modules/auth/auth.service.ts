@@ -50,7 +50,7 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
     // await User_Model.create([userPayload], { session });
 
     const accessToken = jwtHelpers.generateToken(
-     { imagUrl:payload?.imagUrl,
+     { imagUrl:payload?.imagUrl ? payload?.imagUrl :"",
       name:payload.name,
       email: payload.email,
       role: payload.role,

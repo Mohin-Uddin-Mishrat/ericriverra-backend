@@ -44,7 +44,7 @@ const register_user_into_db = async (payload) => {
             accountId: newAccount[0]._id,
         };
         // await User_Model.create([userPayload], { session });
-        const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl,
+        const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl ? payload?.imagUrl : "",
             name: payload.name,
             email: payload.email,
             role: payload.role,
