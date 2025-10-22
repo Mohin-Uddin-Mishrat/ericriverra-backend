@@ -50,21 +50,21 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
     // await User_Model.create([userPayload], { session });
 
     const accessToken = jwtHelpers.generateToken(
-      {
-        name:payload.name,
-        email: payload.email,
-        role: payload.role,
-      },
+     { imagUrl:payload?.imagUrl,
+      name:payload.name,
+      email: payload.email,
+      role: payload.role,
+    },
       configs.jwt.access_token as Secret,
       configs.jwt.access_expires as string
     );
 
     const refreshToken = jwtHelpers.generateToken(
-      {
-        name:payload.name,
-        email: payload.email,
-        role: payload.role,
-      },
+      { imagUrl:payload?.imagUrl,
+      name:payload.name,
+      email: payload.email,
+      role: payload.role,
+    },
       configs.jwt.refresh_token as Secret,
       configs.jwt.refresh_expires as string
     );
