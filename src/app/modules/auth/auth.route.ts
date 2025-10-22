@@ -222,8 +222,8 @@ authRoute.post(
 authRoute.patch(
   "/update-profile",
   auth("ARCHITECTURE", "USER"),
-  optionalFileUpload(uploader.single("file")),
-  optionalCloudinaryUpload(cloudinaryUpload),
+  // optionalFileUpload(uploader.single("file")),
+  // optionalCloudinaryUpload(cloudinaryUpload),
   auth_controllers.update_my_profile
 );
 
