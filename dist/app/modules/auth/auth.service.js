@@ -8,7 +8,6 @@ const app_error_1 = require("../../utils/app_error");
 const auth_schema_1 = require("./auth.schema");
 const http_status_1 = __importDefault(require("http-status"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const user_schema_1 = require("../user/user.schema");
 const mongoose_1 = __importDefault(require("mongoose"));
 const JWT_1 = require("../../utils/JWT");
 const configs_1 = require("../../configs");
@@ -104,14 +103,10 @@ const update_my_profile_to_db = async (email, payload) => {
     };
 };
 const get_my_profile_from_db = async (email) => {
-    const isExistAccount = await (0, isAccountExist_1.isAccountExist)(email);
-    const accountProfile = await user_schema_1.User_Model.findOne({
-        accountId: isExistAccount._id,
-    });
-    isExistAccount.password = "";
+    const userInfo = await (0, isAccountExist_1.isAccountExist)(email);
+    userInfo.password = "";
     return {
-        account: isExistAccount,
-        profile: accountProfile,
+        profile: userInfo,
     };
 };
 const refresh_token_from_db = async (token) => {

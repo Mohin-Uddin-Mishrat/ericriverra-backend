@@ -1,5 +1,4 @@
 import { TAccount, TLoginPayload, TRegisterPayload, TUpdateProfilePayload } from "./auth.interface";
-import { TUser } from "../user/user.interface";
 import mongoose from "mongoose";
 import { JwtPayload } from "jsonwebtoken";
 export declare const auth_services: {
@@ -22,16 +21,11 @@ export declare const auth_services: {
         };
     }>;
     get_my_profile_from_db: (email: string) => Promise<{
-        account: mongoose.Document<unknown, {}, TAccount, {}, mongoose.DefaultSchemaOptions> & TAccount & {
+        profile: mongoose.Document<unknown, {}, TAccount, {}, mongoose.DefaultSchemaOptions> & TAccount & {
             _id: mongoose.Types.ObjectId;
         } & {
             __v: number;
         };
-        profile: (mongoose.Document<unknown, {}, TUser, {}, mongoose.DefaultSchemaOptions> & TUser & {
-            _id: mongoose.Types.ObjectId;
-        } & {
-            __v: number;
-        }) | null;
     }>;
     refresh_token_from_db: (token: string) => Promise<string>;
     change_password_from_db: (user: JwtPayload, payload: {
