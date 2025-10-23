@@ -73,18 +73,18 @@ export const setupSwagger = (app: Express) => {
           "Backend API for multivendor e-commerce system with customers and vendors",
       },
       servers: [
+        // {
+        //   url: "https://ericriverra-backend-1.onrender.com",
+        //   description: "Live server",
+        // },
+        // // {
+        // //   url: "https://staging.ericriverra-backend.onrender.com",
+        // //   description: "Staging server",
+        // // },
         {
-          url: "https://ericriverra-backend-1.onrender.com",
-          description: "Live server",
+          url: "http://localhost:5000",
+          description: "Local development server",
         },
-        // {
-        //   url: "https://staging.ericriverra-backend.onrender.com",
-        //   description: "Staging server",
-        // },
-        // {
-        //   url: "http://localhost:5000",
-        //   description: "Local development server",
-        // },
       ],
       tags: [
         {
