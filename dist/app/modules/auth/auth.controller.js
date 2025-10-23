@@ -72,7 +72,7 @@ const get_my_profile = (0, catch_async_1.default)(async (req, res) => {
         statusCode: http_status_1.default.OK,
         success: true,
         message: "User profile fetched successfully!",
-        data: result,
+        data: result.profile,
     });
 });
 const refresh_token = (0, catch_async_1.default)(async (req, res) => {
