@@ -137,14 +137,10 @@ const update_my_profile_to_db = async (email: string,payload:TUpdateProfilePaylo
   };
 };
 const get_my_profile_from_db = async (email: string) => {
-  const isExistAccount = await isAccountExist(email);
-  const accountProfile = await User_Model.findOne({
-    accountId: isExistAccount._id,
-  });
-  isExistAccount.password = "";
+  const userInfo = await isAccountExist(email);
+  userInfo.password = "";
   return {
-    account: isExistAccount,
-    profile: accountProfile,
+    profile: userInfo,
   };
 };
 

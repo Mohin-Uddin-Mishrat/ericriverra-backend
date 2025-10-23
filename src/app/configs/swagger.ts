@@ -77,10 +77,10 @@ export const setupSwagger = (app: Express) => {
           url: "https://ericriverra-backend-1.onrender.com",
           description: "Live server",
         },
-        // {
-        //   url: "https://staging.ericriverra-backend.onrender.com",
-        //   description: "Staging server",
-        // },
+        // // {
+        // //   url: "https://staging.ericriverra-backend.onrender.com",
+        // //   description: "Staging server",
+        // // },
         // {
         //   url: "http://localhost:5000",
         //   description: "Local development server",

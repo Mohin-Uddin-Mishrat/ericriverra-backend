@@ -212,6 +212,102 @@ const authRoute = Router();
  *         description: Internal server error
  */
 
+
+
+/**
+ * @swagger
+ * /api/v1/auth/get-profile:
+ *   get:
+ *     summary: Get logged-in user profile
+ *     description: Returns the profile information of the authenticated user. Requires a valid JWT token. Both USER and ARCHITECTURE roles are allowed.
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User profile fetched successfully!
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 652d52f9a3b0a32b0498e7d3
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: johndoe@gmail.com
+ *                     phoneNumber:
+ *                       type: string
+ *                       example: "+8801712345678"
+ *                     companyName:
+ *                       type: string
+ *                       example: Tech Solutions Ltd
+ *                     imagUrl:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/demo/image/upload/v1234567/profile.jpg
+ *                     bio:
+ *                       type: string
+ *                       example: "Software Engineer at XYZ Corp."
+ *                     role:
+ *                       type: string
+ *                       enum: [ADMIN, USER, ARCHITECTURE]
+ *                       example: USER
+ *                     accountStatus:
+ *                       type: string
+ *                       example: ACTIVE
+ *                     isVerified:
+ *                       type: boolean
+ *                       example: true
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-10-23T06:45:12.000Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-10-23T06:50:21.000Z
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ */
+
 authRoute.post(
   "/register",
   RequestValidator(auth_validation.register_validation),
@@ -225,7 +321,7 @@ authRoute.post(
 
 
 authRoute.get(
-  "/me",
+  "/get-profile",
   auth("ARCHITECTURE", "USER"),
   auth_controllers.get_my_profile
 );
