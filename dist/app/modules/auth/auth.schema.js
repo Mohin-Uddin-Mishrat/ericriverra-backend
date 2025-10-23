@@ -3,16 +3,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Account_Model = void 0;
 const mongoose_1 = require("mongoose");
 const authSchema = new mongoose_1.Schema({
+    name: { type: String, required: true },
     email: { type: String, required: true },
+    phoneNumber: { type: String, default: null },
     password: { type: String, required: true },
     lastPasswordChange: { type: String },
+    companyName: { type: String, default: null },
     isDeleted: { type: Boolean, default: false },
     accountStatus: { type: String, default: "ACTIVE" },
-    role: { type: String, enum: ["ADMIN", "USER", "ARCHITECTURE"], default: "USER" },
-    isVerified: { type: Boolean, default: false }
+    imagUrl: { type: String, default: null },
+    bio: { type: String, default: null },
+    role: {
+        type: String,
+        enum: ["ADMIN", "USER", "ARCHITECTURE"],
+        default: "USER",
+    },
+    isVerified: { type: Boolean, default: false },
 }, {
     versionKey: false,
-    timestamps: true
+    timestamps: true,
 });
-exports.Account_Model = (0, mongoose_1.model)("account", authSchema);
+exports.Account_Model = (0, mongoose_1.model)("User", authSchema);
 //# sourceMappingURL=auth.schema.js.map

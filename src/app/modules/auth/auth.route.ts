@@ -1,14 +1,17 @@
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 import { auth_controllers } from "./auth.controller";
 import RequestValidator from "../../middlewares/request_validator";
 import { auth_validation } from "./auth.validation";
 import auth from "../../middlewares/auth";
+import uploader from "../../middlewares/uploader";
+import cloudinaryUpload from "../../middlewares/cloudinaryUpload";
+import { optionalCloudinaryUpload, optionalFileUpload } from "../../middlewares/optionalUpload";
 
-const authRoute = Router()
+const authRoute = Router();
 
 /**
  * @swagger
- * /api/auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Register a new user
  *     description: Create a new user account with email, password, name, and role.
@@ -71,7 +74,7 @@ const authRoute = Router()
 
 /**
  * @swagger
- * /api/auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     description: Login with email and password to receive access token and refresh token.
@@ -89,10 +92,10 @@ const authRoute = Router()
  *             properties:
  *               email:
  *                 type: string
- *                 example: user@example.com
+ *                 example: bob.afn@k.com
  *               password:
  *                 type: string
- *                 example: StrongPassword123
+ *                 example: Adminpass455
  *     responses:
  *       200:
  *         description: Login successful
@@ -121,41 +124,241 @@ const authRoute = Router()
  *                       example: USER
  */
 
-authRoute.post("/register", RequestValidator(auth_validation.register_validation), auth_controllers.register_user)
-authRoute.post("/login", RequestValidator(auth_validation.login_validation), auth_controllers.login_user)
+
+
+/**
+ * @swagger
+ * /api/v1/auth/update-profile:
+ *   patch:
+ *     summary: Update user profile
+ *     description: Update the authenticated user's profile information including name, bio, phone number, company name, and profile image
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: User's full name
+ *                 example: John Doe
+ *               bio:
+ *                 type: string
+ *                 description: User's biography
+ *                 example: Software developer with 5 years of experience
+ *               phoneNumber:
+ *                 type: string
+ *                 description: User's phone number
+ *                 example: +1234567890
+ *               companyName:
+ *                 type: string
+ *                 description: User's company name
+ *                 example: Tech Solutions Inc.
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *                 description: Profile image file (will be uploaded to Cloudinary)
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User profile fetched successfully!
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 507f1f77bcf86cd799439011
+ *                     email:
+ *                       type: string
+ *                       example: user@example.com
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     bio:
+ *                       type: string
+ *                       example: Software developer with 5 years of experience
+ *                     phoneNumber:
+ *                       type: string
+ *                       example: +1234567890
+ *                     companyName:
+ *                       type: string
+ *                       example: Tech Solutions Inc.
+ *                     imagUrl:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/demo/image/upload/v1234567890/profile.jpg
+ *       401:
+ *         description: Unauthorized - Invalid or missing token
+ *       403:
+ *         description: Forbidden - User role not authorized
+ *       500:
+ *         description: Internal server error
+ */
+
+
+
+/**
+ * @swagger
+ * /api/v1/auth/get-profile:
+ *   get:
+ *     summary: Get logged-in user profile
+ *     description: Returns the profile information of the authenticated user. Requires a valid JWT token. Both USER and ARCHITECTURE roles are allowed.
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile fetched successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User profile fetched successfully!
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       example: 652d52f9a3b0a32b0498e7d3
+ *                     name:
+ *                       type: string
+ *                       example: John Doe
+ *                     email:
+ *                       type: string
+ *                       example: johndoe@gmail.com
+ *                     phoneNumber:
+ *                       type: string
+ *                       example: "+8801712345678"
+ *                     companyName:
+ *                       type: string
+ *                       example: Tech Solutions Ltd
+ *                     imagUrl:
+ *                       type: string
+ *                       example: https://res.cloudinary.com/demo/image/upload/v1234567/profile.jpg
+ *                     bio:
+ *                       type: string
+ *                       example: "Software Engineer at XYZ Corp."
+ *                     role:
+ *                       type: string
+ *                       enum: [ADMIN, USER, ARCHITECTURE]
+ *                       example: USER
+ *                     accountStatus:
+ *                       type: string
+ *                       example: ACTIVE
+ *                     isVerified:
+ *                       type: boolean
+ *                       example: true
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-10-23T06:45:12.000Z
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                       example: 2025-10-23T06:50:21.000Z
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Unauthorized access
+ *       404:
+ *         description: User not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: User not found
+ */
+
+authRoute.post(
+  "/register",
+  RequestValidator(auth_validation.register_validation),
+  auth_controllers.register_user
+);
+authRoute.post(
+  "/login",
+  RequestValidator(auth_validation.login_validation),
+  auth_controllers.login_user
+);
+
 
 authRoute.get(
-    '/me',
-    auth("ARCHITECTURE", "USER"),
-    auth_controllers.get_my_profile,
+  "/get-profile",
+  auth("ARCHITECTURE", "USER"),
+  auth_controllers.get_my_profile
 );
 
-authRoute.post('/refresh-token', auth_controllers.refresh_token);
+authRoute.patch(
+  "/update-profile",
+  auth("ARCHITECTURE", "USER"),
+  optionalFileUpload(uploader.single("file")),
+  optionalCloudinaryUpload(cloudinaryUpload),
+  auth_controllers.update_my_profile
+);
+authRoute.post("/refresh-token", auth_controllers.refresh_token);
 authRoute.post(
-    '/change-password',
-    auth("ARCHITECTURE", "USER"),
-    RequestValidator(auth_validation.changePassword),
-    auth_controllers.change_password,
+  "/change-password",
+  auth("ARCHITECTURE", "USER"),
+  RequestValidator(auth_validation.changePassword),
+  auth_controllers.change_password
 );
 authRoute.post(
-    '/forgot-password',
-    RequestValidator(auth_validation.forgotPassword),
-    auth_controllers.forget_password,
+  "/forgot-password",
+  RequestValidator(auth_validation.forgotPassword),
+  auth_controllers.forget_password
 );
 authRoute.post(
-    '/reset-password',
-    RequestValidator(auth_validation.resetPassword),
-    auth_controllers.reset_password,
+  "/reset-password",
+  RequestValidator(auth_validation.resetPassword),
+  auth_controllers.reset_password
 );
 
 authRoute.post(
-    "/verified-account",
-    RequestValidator(auth_validation.verified_account),
-    auth_controllers.verified_account
-)
+  "/verified-account",
+  RequestValidator(auth_validation.verified_account),
+  auth_controllers.verified_account
+);
 authRoute.post(
-    "/new-verification-link",
-    RequestValidator(auth_validation.forgotPassword),
-    auth_controllers.get_new_verification_link
-)
+  "/new-verification-link",
+  RequestValidator(auth_validation.forgotPassword),
+  auth_controllers.get_new_verification_link
+);
 export default authRoute;

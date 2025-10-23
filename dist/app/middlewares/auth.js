@@ -8,15 +8,19 @@ const auth = (...roles) => {
     return async (req, res, next) => {
         try {
             const token = req.headers.authorization;
+            console.log(token);
             if (!token) {
                 throw new app_error_1.AppError('You are not authorize!!', 401);
             }
-            const verifiedUser = JWT_1.jwtHelpers.verifyToken(token, configs_1.configs.jwt.access_token);
+            const verifyToken = token.split(' ')[1];
+            const verifiedUser = JWT_1.jwtHelpers.verifyToken(verifyToken, configs_1.configs.jwt.access_token);
+            console.log(verifiedUser.email, '.................verify user');
             if (!roles.length || !roles.includes(verifiedUser.role)) {
                 throw new app_error_1.AppError('You are not authorize!!', 401);
             }
             // check user
             const isUserExist = await auth_schema_1.Account_Model.findOne({ email: verifiedUser?.email }).lean();
+            console.log(isUserExist, 'user exist........................');
             if (!isUserExist) {
                 throw new app_error_1.AppError("Account not found !", 404);
             }
@@ -26,13 +30,15 @@ const auth = (...roles) => {
             if (isUserExist?.isDeleted) {
                 throw new app_error_1.AppError("This account is deleted", 401);
             }
-            if (!isUserExist?.isVerified) {
-                throw new app_error_1.AppError("This account is not verified ", 401);
-            }
+            // if (!isUserExist?.isVerified) {
+            //     throw new AppError("This account is not verified ", 401)
+            // }
             req.user = verifiedUser;
+            console.log(req.user.email, '...............req user email');
             next();
         }
         catch (err) {
+            console.log(err);
             next(err);
         }
     };

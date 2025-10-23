@@ -1,3 +1,63 @@
+// import swaggerUi from "swagger-ui-express";
+// import swaggerJSDoc from "swagger-jsdoc";
+// import { Express } from "express";
+
+// export const setupSwagger = (app: Express) => {
+//   const options = {
+//     definition: {
+//       openapi: "3.0.0",
+//       info: {
+//         title: "Multivendor E-commerce API",
+//         version: "1.0.0",
+//         description: "Backend API for multivendor e-commerce system with customers and vendors",
+//       },
+//       servers: [
+//         // {
+//         //   url: "https://ericriverra-backend.onrender.com",
+//         //   description: "Live server",
+//         // },
+//         {
+//           url: "http://localhost:5000",
+//           description: "Local development server",
+//         },
+//       ],
+//       tags: [
+//         {
+//           name: "Users",
+//           description: "User management endpoints",
+//         },
+//         {
+//           name: "Products",
+//           description: "Product management APIs (Admin & Vendor)",
+//         },
+//       ],
+//       components: {
+//         securitySchemes: {
+//           bearerAuth: {
+//             type: "http",
+//             scheme: "bearer",
+//             bearerFormat: "JWT",
+//           },
+//         },
+//       },
+//     },
+//     apis: ["./src/app/modules/**/*.ts"],
+//     // route files with Swagger comments
+//   };
+
+
+//   const swaggerSpec = swaggerJSDoc(options);
+//   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+//     swaggerOptions: {
+//       tagsSorter: 'none',
+//       operationsSorter: 'none',
+//     }
+//   }));
+//   console.log("📘 Swagger docs available at: http://localhost:5000/docs");
+// };
+
+
+
 import swaggerUi from "swagger-ui-express";
 import swaggerJSDoc from "swagger-jsdoc";
 import { Express } from "express";
@@ -9,17 +69,22 @@ export const setupSwagger = (app: Express) => {
       info: {
         title: "Multivendor E-commerce API",
         version: "1.0.0",
-        description: "Backend API for multivendor e-commerce system with customers and vendors",
+        description:
+          "Backend API for multivendor e-commerce system with customers and vendors",
       },
       servers: [
         {
-          url: "https://ericriverra-backend.onrender.com",
+          url: "https://ericriverra-backend-1.onrender.com",
           description: "Live server",
         },
-        {
-          url: "http://localhost:5000",
-          description: "Local development server",
-        },
+        // // {
+        // //   url: "https://staging.ericriverra-backend.onrender.com",
+        // //   description: "Staging server",
+        // // },
+        // {
+        //   url: "http://localhost:5000",
+        //   description: "Local development server",
+        // },
       ],
       tags: [
         {
@@ -41,17 +106,23 @@ export const setupSwagger = (app: Express) => {
         },
       },
     },
+    // make sure the paths point to your route files correctly
     apis: ["./src/app/modules/**/*.ts"],
-    // route files with Swagger comments
   };
 
-
   const swaggerSpec = swaggerJSDoc(options);
-  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
-    swaggerOptions: {
-      tagsSorter: 'none',
-      operationsSorter: 'none',
-    }
-  }));
+
+  app.use(
+    "/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      swaggerOptions: {
+        tagsSorter: "none",
+        operationsSorter: "none",
+      },
+    })
+  );
+
   console.log("📘 Swagger docs available at: http://localhost:5000/docs");
 };
+

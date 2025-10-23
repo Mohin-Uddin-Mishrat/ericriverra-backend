@@ -1,11 +1,23 @@
 export type TAccount = {
+    name: string;
     email: string;
     password: string;
+    bio?: string;
+    imagUrl?: string;
     lastPasswordChange?: Date;
     isDeleted?: boolean;
+    phoneNumber?: string;
+    companyName?: string;
     accountStatus?: "ACTIVE" | "INACTIVE" | "SUSPENDED";
     role?: "USER" | "ADMIN" | "ARCHITECTURE";
     isVerified?: boolean;
+};
+export type TUpdateProfilePayload = {
+    name?: string;
+    bio?: string;
+    phoneNumber?: string;
+    companyName?: string;
+    imagUrl?: string;
 };
 export interface TRegisterPayload extends TAccount {
     name: string;

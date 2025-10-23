@@ -15,10 +15,20 @@ import auth from "../../middlewares/auth";
 
 /**
  * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
+ * @swagger
  * /api/v1/media/create:
  *   post:
  *     summary: Upload a media file
- *     description: Allows a user to upload a media file (image, video, etc.) with metadata like title, description, and type.
+ *     description: Allows an authenticated user to upload a media file (image, video, etc.) with metadata like title, description, and type.
  *     tags: [Media]
  *     security:
  *       - bearerAuth: []
@@ -70,6 +80,9 @@ import auth from "../../middlewares/auth";
  *                     title:
  *                       type: string
  *                       example: "Modern Architecture Project"
+ *                     status:
+ *                       type: string
+ *                       example: "draft"
  *                     type:
  *                       type: string
  *                       example: "portfolio"
@@ -81,8 +94,30 @@ import auth from "../../middlewares/auth";
  *                       example: "A personal portfolio showcasing architectural design."
  *       400:
  *         description: Bad request (missing or invalid data)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Missing required fields"
  *       401:
- *         description: Unauthorized
+ *         description: Unauthorized – token missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  */
 
 /**
@@ -122,6 +157,19 @@ import auth from "../../middlewares/auth";
  *                       description:
  *                         type: string
  *                         example: "A brief project summary"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  */
 
 /**
@@ -171,8 +219,30 @@ import auth from "../../middlewares/auth";
  *                         example: "A detailed case study"
  *       401:
  *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "You are not authorized!"
  *       404:
  *         description: No media found for the specified user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "No media found for this user"
  */
 
 
@@ -181,6 +251,7 @@ const mediaRouter = Router();
 
 mediaRouter.post(
   "/create",
+  auth("USER", "ARCHITECTURE"),
   uploader.single("file"),
   cloudinaryUpload,
   mediaController.createMediaController
