@@ -2,18 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import * as mediaService from "./media.service";
 import { JwtPayloadType } from "../../utils/JWT";
 
-
 export const createMediaController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   const user = req.user as JwtPayloadType;
-// const email ='emon@gmail.com'
+  // const email ='emon@gmail.com'
+  console.log("Logged-in user email:", user.email);
 
   try {
     const { title, type, status, description } = req.body;
     const cloudinaryData = req?.cloudinaryData;
+    
 
     if (!req.file) {
       return res.status(400).json({
@@ -34,7 +35,7 @@ export const createMediaController = async (
     }
 
     const payload = {
-      userEmail:user.email,
+      userEmail: user.email,
       title: title.trim(),
       type,
       fileUrl: cloudinaryData?.url,
