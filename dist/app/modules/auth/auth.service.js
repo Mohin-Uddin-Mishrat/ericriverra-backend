@@ -43,15 +43,21 @@ const register_user_into_db = async (payload) => {
             accountId: newAccount[0]._id,
         };
         // await User_Model.create([userPayload], { session });
-        const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl ? payload?.imagUrl : "",
-            name: payload.name,
-            email: payload.email,
-            role: payload.role,
+        const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl ?? "",
+            name: payload?.name ?? "",
+            email: payload?.email ?? "",
+            role: payload?.role ?? "",
+            bio: payload?.bio ?? "",
+            phoneNumber: payload?.phoneNumber ?? "",
+            companyName: payload?.companyName ?? "",
         }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
-        const refreshToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl,
-            name: payload.name,
-            email: payload.email,
-            role: payload.role,
+        const refreshToken = JWT_1.jwtHelpers.generateToken({ imagUrl: payload?.imagUrl ?? "",
+            name: payload?.name ?? "",
+            email: payload?.email ?? "",
+            role: payload?.role ?? "",
+            bio: payload?.bio ?? "",
+            phoneNumber: payload?.phoneNumber ?? "",
+            companyName: payload?.companyName ?? "",
         }, configs_1.configs.jwt.refresh_token, configs_1.configs.jwt.refresh_expires);
         await session.commitTransaction();
         return {
@@ -78,15 +84,21 @@ const login_user_from_db = async (payload) => {
     if (!isPasswordMatch) {
         throw new app_error_1.AppError("Invalid password", http_status_1.default.UNAUTHORIZED);
     }
-    const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: isExistAccount?.imagUrl,
-        name: isExistAccount.name,
-        email: isExistAccount.email,
-        role: isExistAccount.role,
+    const accessToken = JWT_1.jwtHelpers.generateToken({ imagUrl: isExistAccount?.imagUrl ?? "",
+        name: isExistAccount?.name ?? "",
+        email: isExistAccount?.email ?? "",
+        role: isExistAccount?.role ?? "",
+        bio: isExistAccount?.bio ?? "",
+        phoneNumber: isExistAccount?.phoneNumber ?? "",
+        companyName: isExistAccount?.companyName ?? "",
     }, configs_1.configs.jwt.access_token, configs_1.configs.jwt.access_expires);
     const refreshToken = JWT_1.jwtHelpers.generateToken({ imagUrl: isExistAccount?.imagUrl,
         name: isExistAccount.name,
         email: isExistAccount.email,
         role: isExistAccount.role,
+        bio: isExistAccount?.bio,
+        phoneNumber: isExistAccount?.phoneNumber,
+        companyName: isExistAccount?.companyName
     }, configs_1.configs.jwt.refresh_token, configs_1.configs.jwt.refresh_expires);
     return {
         accessToken: accessToken,
