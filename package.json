@@ -16,6 +16,7 @@
   "dependencies": {
     "@types/cors": "^2.8.19",
     "bcrypt": "^6.0.0",
+    "node-fetch": "^3.3.2",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
