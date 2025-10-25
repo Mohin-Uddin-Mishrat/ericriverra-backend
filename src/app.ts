@@ -23,8 +23,10 @@ app.use(
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // ✅ if you're using cookies or tokens
   })
 );
+
 setupSwagger(app);
 app.use(express.json());
 app.use(cookieParser());
