@@ -18,7 +18,7 @@ app.use(
       "http://localhost:5175/",
       "http://localhost:5176/",
       "http://localhost:3000/",
-      "https://eric-rivera-front-end.netlify.app/",
+      "https://eric-rivera-front-end.netlify.app",
       '*'
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
