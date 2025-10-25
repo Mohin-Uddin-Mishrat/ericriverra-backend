@@ -50,20 +50,27 @@ const register_user_into_db = async (payload: TRegisterPayload) => {
     // await User_Model.create([userPayload], { session });
 
     const accessToken = jwtHelpers.generateToken(
-     { imagUrl:payload?.imagUrl ? payload?.imagUrl :"",
-      name:payload.name,
-      email: payload.email,
-      role: payload.role,
+     {  imagUrl: payload?.imagUrl ?? "",
+  name: payload?.name ?? "",
+  email: payload?.email ?? "",
+  role: payload?.role ?? "",
+  bio: payload?.bio ?? "",
+  phoneNumber: payload?.phoneNumber ?? "",
+  companyName: payload?.companyName ?? "",
+      
     },
       configs.jwt.access_token as Secret,
       configs.jwt.access_expires as string
     );
 
     const refreshToken = jwtHelpers.generateToken(
-      { imagUrl:payload?.imagUrl,
-      name:payload.name,
-      email: payload.email,
-      role: payload.role,
+      { imagUrl: payload?.imagUrl ?? "",
+  name: payload?.name ?? "",
+  email: payload?.email ?? "",
+  role: payload?.role ?? "",
+  bio: payload?.bio ?? "",
+  phoneNumber: payload?.phoneNumber ?? "",
+  companyName: payload?.companyName ?? "",
     },
       configs.jwt.refresh_token as Secret,
       configs.jwt.refresh_expires as string
@@ -99,20 +106,26 @@ const login_user_from_db = async (payload: TLoginPayload) => {
     throw new AppError("Invalid password", httpStatus.UNAUTHORIZED);
   }
   const accessToken = jwtHelpers.generateToken(
-    { imagUrl:isExistAccount?.imagUrl,
-      name:isExistAccount.name,
-      email: isExistAccount.email,
-      role: isExistAccount.role,
+    {  imagUrl: isExistAccount?.imagUrl ?? "",
+  name: isExistAccount?.name ?? "",
+  email: isExistAccount?.email ?? "",
+  role: isExistAccount?.role ?? "",
+  bio: isExistAccount?.bio ?? "",
+  phoneNumber: isExistAccount?.phoneNumber ?? "",
+  companyName: isExistAccount?.companyName ?? "",
     },
     configs.jwt.access_token as Secret,
     configs.jwt.access_expires as string
   );
 
   const refreshToken = jwtHelpers.generateToken(
-    { imagUrl:isExistAccount?.imagUrl,
+   {  imagUrl:isExistAccount?.imagUrl,
       name:isExistAccount.name,
       email: isExistAccount.email,
       role: isExistAccount.role,
+      bio:isExistAccount?.bio,
+      phoneNumber:isExistAccount?.phoneNumber,
+      companyName:isExistAccount?.companyName
     },
     configs.jwt.refresh_token as Secret,
     configs.jwt.refresh_expires as string
